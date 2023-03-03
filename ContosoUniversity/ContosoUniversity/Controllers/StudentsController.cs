@@ -154,7 +154,7 @@ namespace ContosoUniversity.Controllers
             }
 
             return View(student);
-        }  return View(student);
+        }
     }
 
     // POST: Students/Delete/5
