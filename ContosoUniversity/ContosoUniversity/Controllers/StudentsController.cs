@@ -22,7 +22,7 @@ namespace ContosoUniversity.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Students.ToListAsync());
+            return View(await _context.Students.ToListAsync());
         }
 
         // GET: Students/Details/5
@@ -76,9 +76,9 @@ namespace ContosoUniversity.Controllers
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
-            }            
+            }
             return View(student);
-         
+
         }
 
         // GET: Students/Edit/5
@@ -131,45 +131,53 @@ namespace ContosoUniversity.Controllers
         }
 
         // GET: Students/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
-            if (id == null || _context.Students == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var student = await _context.Students
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (student == null)
             {
                 return NotFound();
             }
 
-            return View(student);
-        }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
+            }
 
-        // POST: Students/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+            return View(student);
+        }  return View(student);
+    }
+
+    // POST: Students/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var student = await _context.Students.FindAsync(id);
+        if (student == null)
         {
-            if (_context.Students == null)
-            {
-                return Problem("Entity set 'SchoolContext.Students'  is null.");
-            }
-            var student = await _context.Students.FindAsync(id);
-            if (student != null)
-            {
-                _context.Students.Remove(student);
-            }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id)
+        try
         {
-          return _context.Students.Any(e => e.ID == id);
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-    }
+        catch (DbUpdateException /* ex */)
+        {
+            //Log the error (uncomment ex variable name and write a log.)
+            return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+        }
+    }   
 }
