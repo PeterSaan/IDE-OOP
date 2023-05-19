@@ -1,0 +1,5 @@
+MapperUnoptimized: 0,001848
+MapperOptimized: 0,000562
+MapperDynamicCode: 0,00049
+MapperLcg: 0,000252
+AutoMapper: 0,000195

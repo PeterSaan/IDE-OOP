@@ -7,7 +7,7 @@ namespace ObjectToObjectMapper
 public class MapperOptimized : ObjectCopyBase
 {
     private readonly Dictionary<string, PropertyMap[]> _maps = new Dictionary<string, PropertyMap[]>();
-    
+
     public override void MapTypes(Type source, Type target)
     {
         var key = GetMapKey(source, target);

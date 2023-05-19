@@ -13,7 +13,7 @@ public class MapperUnoptimized : ObjectCopyBase
         var sourceType = source.GetType();
         var targetType = target.GetType();
         var propMap = GetMatchingProperties(sourceType, targetType);
-
+           
         for (var i = 0; i < propMap.Count; i++)
         {
             var prop = propMap[i];
