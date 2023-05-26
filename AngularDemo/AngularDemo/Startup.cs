@@ -4,10 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Configuration;
 
 public class Startup
 {
+    public object Configuration { get; set; }
     public IConfiguration configRoot { get; }
+
     public Startup(IConfiguration configuration)
     {
         configRoot = configuration;
