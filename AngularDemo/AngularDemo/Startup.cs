@@ -8,7 +8,6 @@ using System.Configuration;
 
 public class Startup
 {
-    public object Configuration { get; set; }
     public IConfiguration configRoot { get; }
 
     public Startup(IConfiguration configuration)
@@ -18,7 +17,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllersWithViews();
-        string connectionString = Configuration.GetConnectionString("default");
+        string connectionString = configRoot.GetConnectionString("default");
         services.AddDbContext<AppDBContext>(c => c.UseSqlServer(connectionString));
     }
     public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -30,9 +29,13 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
+
         app.UseStaticFiles();
+
         app.UseRouting();
+
         app.UseAuthorization();
+
         app.Run();
     }
 }
